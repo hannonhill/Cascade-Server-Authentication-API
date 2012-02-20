@@ -1,0 +1,1 @@
+Please visit our Knowledge Base for more details: http://www.hannonhill.com/kb/Authentication/index.html#custom-user-authentication
