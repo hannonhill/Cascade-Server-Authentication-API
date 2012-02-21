@@ -15,7 +15,7 @@ The structure of the project is as follows:
 - [lib/com/hannonhill/cascade/model/security/authentication/Authenticator](https://github.com/hannonhill/Cascade-Server-Authentication-API/blob/master/lib/com/hannonhill/cascade/model/security/authentication/Authenticator.java) - Interface that custom auth modules must implement
 - [lib/com/hannonhill/cascade/model/security/authentication/AuthenticationPhase](https://github.com/hannonhill/Cascade-Server-Authentication-API/blob/master/lib/com/hannonhill/cascade/model/security/authentication/AuthenticationPhase.java) - Enum describing the phases of Authentication that any implementation of Authenticator should handle
 - tomcat-6.0.32-servlet-api.jar - JAR containing the classes from the [Servlet API](http://docs.oracle.com/javaee/6/api/javax/servlet/package-summary.html) used by Cascade's Authenticator interface
-- src/example/SampleAuthenticator - a sample implementation of Authenticator that just bypasses redirecting to a third-party site and always authenticates as a static user: admin2
+- [src/example/SampleAuthenticator](https://github.com/hannonhill/Cascade-Server-Authentication-API/blob/master/src/example/SampleAuthenticator.java) - a sample implementation of Authenticator that just bypasses redirecting to a third-party site and always authenticates as a static user: admin2
 
 
 ### Authenticator Interface
