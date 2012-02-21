@@ -15,4 +15,36 @@ The structure of the project is as follows:
 - [lib/com/hannonhill/cascade/model/security/authentication/Authenticator](https://github.com/hannonhill/Cascade-Server-Authentication-API/blob/master/lib/com/hannonhill/cascade/model/security/authentication/Authenticator.java) - Interface that custom auth modules must implement
 - [lib/com/hannonhill/cascade/model/security/authentication/AuthenticationPhase](https://github.com/hannonhill/Cascade-Server-Authentication-API/blob/master/lib/com/hannonhill/cascade/model/security/authentication/AuthenticationPhase.java) - Enum describing the phases of Authentication that any implementation of Authenticator should handle
 - tomcat-6.0.32-servlet-api.jar - JAR containing the classes from the [Servlet API](http://docs.oracle.com/javaee/6/api/javax/servlet/package-summary.html) used by Cascade's Authenticator interface
+- src/example/SampleAuthenticator - a sample implementation of Authenticator that just bypasses redirecting to a third-party site and always authenticates as a static user: admin2
 
+
+### Authenticator Interface
+
+All custom authentication modules must implement the [Authenticator](https://github.com/hannonhill/Cascade-Server-Authentication-API/blob/master/lib/com/hannonhill/cascade/model/security/authentication/Authenticator.java) interface.
+
+This interface defines two primary methods: [`redirect`](https://github.com/hannonhill/Cascade-Server-Authentication-API/blob/master/lib/com/hannonhill/cascade/model/security/authentication/Authenticator.java#L44) and [`authenticate`](https://github.com/hannonhill/Cascade-Server-Authentication-API/blob/master/lib/com/hannonhill/cascade/model/security/authentication/Authenticator.java#L53)
+
+The `redirect` method is called by Cascade authentication framework during both the [LOGIN](https://github.com/hannonhill/Cascade-Server-Authentication-API/blob/master/lib/com/hannonhill/cascade/model/security/authentication/AuthenticationPhase.java#L15) and [LOGOUT](https://github.com/hannonhill/Cascade-Server-Authentication-API/blob/master/lib/com/hannonhill/cascade/model/security/authentication/AuthenticationPhase.java#L26) phases of the authentication lifecycle.
+
+During the login phase, Cascade call's the custom authentication module's `redirect` method with the LOGIN authentication phase. At this point, the module should redirect to an external web application to handle authentication. Afterwards, the external app should redirect back [Authenticator.AUTHENTICATION_URI](https://github.com/hannonhill/Cascade-Server-Authentication-API/blob/master/lib/com/hannonhill/cascade/model/security/authentication/Authenticator.java#L20) with whatever data the module needs in the request to determine if authentication was successful and which user to authenticate. The AUTHENTICATION_URI is relative to the location where Cascade is deployed.
+
+At this point, Cascade will call the module's `authenticate` method which should determine if the user successfully authenticated and return a String containing the name of the user to authenticate. Cascade will take the username and if it matches an enabled user in the Cascade user database, will create a user session for that user and redirect the browser to the dashboard.
+
+The other phase, LOGOUT, is called when the Log Out link is clicked from within the application. The user's Cascade session is invalidated immediately. The module can then decide where to redirect the user on logout. The typical behavior is for the custom authentication module to redirect the browser back to the external authentication web application where the originally authenticated.
+
+It is important to remember to not store state in the authentication module using instance members. The module is re-instantiated with each call so any data required by the module must bed passed in the method parameters.
+
+### Deployment
+
+An authentication module code should be bundled into a JAR and placed in the $CASCADE_HOME/tomcat/webapps/ROOT/WEB-INF/lib directory. A server restart is required before the module is available to the applicaiton.
+
+After the module is deployed, it must be configured from within Cascade. To configure the module, go to **Tools > Configuration > Custom Authentication Configuration** and enter a snippet similar to the following:
+
+```xml
+	<custom-authentication-module>  
+		<class-name>com.company.auth.sso.CascadePlugin</class-name>  
+		<should-intercept-login-page>true</should-intercept-login-page>  
+	</custom-authentication-module>  
+```
+
+where `class-name` is the package-qualified name of your module class that implements Authenticator.
