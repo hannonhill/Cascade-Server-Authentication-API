@@ -48,3 +48,7 @@ After the module is deployed, it must be configured from within Cascade. To conf
 ```
 
 where `class-name` is the package-qualified name of your module class that implements Authenticator.
+
+### More examples
+
+Visit our [Examples repository](https://github.com/hannonhill/Custom-Authentication-Module-Examples) to see more examples.
