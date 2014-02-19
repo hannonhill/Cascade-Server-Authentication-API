@@ -34,11 +34,25 @@ The other phase, LOGOUT, is called when the Log Out link is clicked from within 
 
 It is important to remember to not store state in the authentication module using instance members. The module is re-instantiated with each call so any data required by the module must bed passed in the method parameters.
 
-### Deployment
+### Installing a custom authentication module
 
-An authentication module code should be bundled into a JAR and placed in the $CASCADE_HOME/tomcat/webapps/ROOT/WEB-INF/lib directory. A server restart is required before the module is available to the applicaiton.
+An authentication module code should be bundled into a JAR and placed in the `$CASCADE_HOME/tomcat/webapps/ROOT/WEB-INF/lib` directory. A server restart is required before the module is available to the applicaiton.
 
-After the module is deployed, it must be configured from within Cascade. To configure the module, go to **Tools > Configuration > Custom Authentication Configuration** and enter a snippet similar to the following:
+After the module is deployed, it must be configured from within Cascade. 
+
+To configure the module in Cascade Server 7.10 or later, go to:
+
+- **Tools > Configuration > Custom Authentication Configuration**
+- 'Enable' the configuration
+- Enter the package qualified classname of your module -- e.g. `com.company.auth.sso.CascadePlugin`
+- Check the box to 'Intercept the login page'
+
+or, if you want to import your configuration from a different instance, you can use the XML pane to copy and paste a complete configuration.
+
+For previous versions:
+
+- go to **Tools > Configuration > Custom Authentication Configuration**
+- enter a snippet like the following:
 
 ```xml
 	<custom-authentication-module>  
