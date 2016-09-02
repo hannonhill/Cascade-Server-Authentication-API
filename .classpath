@@ -7,6 +7,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="tomcat-6.0.32-servlet-api.jar"/>
+	<classpathentry kind="lib" path="servlet-api.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
